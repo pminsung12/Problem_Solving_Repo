@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+ 
 int main(){
 
     int N;//과목 개수
@@ -19,11 +19,11 @@ int main(){
 
     //평균구하기
     for(int j = 0;j<N;j++){
-        avg += score[i];
+        avg += score[j];
     } 
 
     //새로운 평균
-    printf("%.4lf", avg/M*100);
+    printf("%.4lf", avg/M/N*100);
     
 
     return 0;
