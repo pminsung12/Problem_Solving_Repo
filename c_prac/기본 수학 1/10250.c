@@ -5,8 +5,8 @@ int main(){
     scanf("%d\n", &T);
     for(int i=0;i<T;i++){
         scanf("%d %d %d",&H,&W,&N);
-        printf("%d %d %d\n", H, W, N);
-        printf("%d%d\n",N%W,N/H+1);
+        if(N/H+1<10) printf("%d0%d\n",N%H,N/H+1);
+        else printf("%d%d\n",N%H,N/H+1);
     }
     return 0;
 }
