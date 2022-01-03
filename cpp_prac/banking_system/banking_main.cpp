@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#define SiZE 10
+#include <cstring>
+#define SIZE 10
 using namespace std;
 
 void showMenu();
@@ -10,19 +11,11 @@ void withdraw();
 void showAll();
 enum{MAKEACCOUNT=1, DEPOSIT, WITHDRAW, SHOWALL, EXIT};
 
-class Banking{
-private:
+typedef struct{
     int account_number;
-    string name;
     int balance;
-
-public:
-    Banking(){}
-
-    ~Banking() {
-        std::cout << "소멸되었습니다." << std::endl;
-    }
-};
+    string name;
+}Banking;
 
 int acc_cnt=0;//계좌 개수
 Banking member[SIZE];
@@ -32,7 +25,9 @@ int main(void){
     
     while(1){
         showMenu();
+        cout<<"선택: ";
         cin>>a;
+        cout<<endl;
         switch (a){
             case MAKEACCOUNT:
                 makeAccount();
@@ -56,7 +51,6 @@ int main(void){
 
             default:
                 cout<<"유효하지 않은 번호입니다."<<endl;
-                break;
         }
     }
     return 0;
@@ -71,7 +65,7 @@ void showMenu(){
     cout<<" 3. 출 금"<<endl;
     cout<<" 4. 계좌정보 전체 출력"<<endl;
     cout<<" 5. 프로그램 종료"<<endl;
-    count<<"-----------------------"<<endl<<endl;
+    cout<<"-----------------------"<<endl<<endl;
     
 }
 
@@ -81,15 +75,12 @@ void makeAccount(){
     string name;
 
     cout<<"[계좌 개설]"<<endl;
-    cout<<"계좌ID: ";
-    cin>>id;
-    
-    cout<<"이름: ";
-    cin>>name;
-    
-    cout<<"입금액: ";
-    cin>>money;
-    
+    cout<<"계좌ID: ";cin>>id;
+    cin.ignore(256,'\n');
+    cout<<"이름: ";cin>>name;
+    cin.ignore(256,'\n');
+    cout<<"입금액: ";cin>>money;
+    cin.ignore(256,'\n');
     member[acc_cnt].account_number=id;
     member[acc_cnt].name=name;
     member[acc_cnt].balance=money;
@@ -106,7 +97,7 @@ void deposit(){
     cout<<"입금액";cin>>money;
 
     for(int i=0;i<acc_cnt;i++){
-        if(id==member[i].id){
+        if(id==member[i].account_number){
             member[i].balance+=money;
             cout<<"입금완료"<<endl<<endl;
             return;
@@ -123,7 +114,7 @@ void withdraw(){
     cout<<"출금액";cin>>money;
 
     for(int i=0;i<acc_cnt;i++){
-        if(id==member[i].id){
+        if(id==member[i].account_number){
             if(money>member[i].balance){
                 cout<<"잔액부족"<<endl<<endl;
                 return;
@@ -137,7 +128,7 @@ void withdraw(){
 }
 
 //4.계좌정보 전체 출력
-Banking::showAll(){
+void showAll(){
     for(int i=0;i<acc_cnt;i++){
         cout<<"계좌 ID: "<<member[i].account_number<<endl;
         cout<<"이   름: "<<member[i].name<<endl;
