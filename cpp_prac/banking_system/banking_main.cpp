@@ -2,6 +2,7 @@
 #include <string>
 #include <cstring>
 #define SIZE 10
+#define NAME_LEN 20
 using namespace std;
 
 void showMenu();
@@ -72,15 +73,16 @@ void showMenu(){
 //1.계좌 개설
 void makeAccount(){
     int id, money;
-    string name;
+    char name[NAME_LEN];
 
     cout<<"[계좌 개설]"<<endl;
-    cout<<"계좌ID: ";cin>>id;
-    cin.ignore(256,'\n');
-    cout<<"이름: ";cin>>name;
-    cin.ignore(256,'\n');
-    cout<<"입금액: ";cin>>money;
-    cin.ignore(256,'\n');
+    cout<<"계좌ID: ";
+    cin>>id;
+    cout<<"이름: ";
+    cin>>name;
+    cout<<"입금액: ";
+    cin>>money;
+    
     member[acc_cnt].account_number=id;
     member[acc_cnt].name=name;
     member[acc_cnt].balance=money;
