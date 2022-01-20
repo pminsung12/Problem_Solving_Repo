@@ -1,12 +1,17 @@
-//v.0.1
+//v.0.2 클래스와 포인터 객체배열
 #include <iostream>
-#include <string>
 #include <cstring>
-#define SIZE 10
+#define SIZE 100
 #define NAME_LEN 20
 using namespace std;
 
 enum{MAKEACCOUNT=1, DEPOSIT, WITHDRAW, SHOWALL, EXIT};
+void makeAccount();
+void depositMoney();
+void withdrawMoney();
+void showAll();
+void showMenu();
+void chooseMenu();
 
 class Account{
 private:
@@ -14,69 +19,49 @@ private:
     int balance;
     char *name;
 public:
-    Account(){}
+    Account(int _account_number, int _balance, char *_name){
+        account_number=_account_number;
+        balance=_balance;
+        name=new char(strlen(_name)+1);
+        strcpy(name, _name);
+    }
+    Account(){
+        account_number=0;
+        balance=0;
+        name=NULL;
+        cout<<"called Account()"<<endl;
+    }
+    int getID(){
+       return account_number; 
+    }
+    void deposit(int money){
+        balance+=money;
+    }
+    int withdraw(int money){
+        if (balance<money){
+            return 0;
+        }
+        balance-=money;
+        return 1;
+    }
     
-    void makeAccount();
-    void deposit();
-    void withdraw();
-    void showAll();
+    void showInfo(){
+        cout<<"계좌 ID: "<<account_number<<endl;
+        cout<<"이   름: "<<name<<endl;
+        cout<<"입금액 : "<<balance<<endl<<endl;
+    }
+    
+    ~Account(){
+        delete []name;
+    }
 };
 
-class Menu{
-public:
-    void showMenu();
-};
-
-int acc_cnt=0;//계좌 개수
-Account *member = new char[SIZE];
+Account *member[SIZE];
+int acc_cnt=0;
 
 int main(void){
-    int a;
-    
-    while(1){
-        showMenu();
-        cout<<"선택: ";
-        cin>>a;
-        cout<<endl;
-        switch (a){
-            case MAKEACCOUNT:
-                makeAccount();
-                break;
-
-            case DEPOSIT:
-                deposit();
-                break;
-
-            case WITHDRAW:
-                withdraw();
-                break;
-
-            case SHOWALL:
-                showAll();
-                break;
-
-            case EXIT:
-                cout<<"프로그램을 종료합니다."<<endl;
-                return 0;
-
-            default:
-                cout<<"유효하지 않은 번호입니다."<<endl;
-        }
-    }
+    chooseMenu();
     return 0;
-}
-
-//Menu
-void showMenu(){
-
-    cout<<"-----------Menu---------"<<endl;
-    cout<<" 1. 계좌개설"<<endl;
-    cout<<" 2. 입 금"<<endl;
-    cout<<" 3. 출 금"<<endl;
-    cout<<" 4. 계좌정보 전체 출력"<<endl;
-    cout<<" 5. 프로그램 종료"<<endl;
-    cout<<"-----------------------"<<endl<<endl;
-    
 }
 
 //1.계좌 개설
@@ -92,24 +77,21 @@ void makeAccount(){
     cout<<"입금액: ";
     cin>>money;
     
-    member[acc_cnt].account_number=id;
-    member[acc_cnt].name=name;
-    member[acc_cnt].balance=money;
+    member[acc_cnt]=new Account(id, money, name);
     acc_cnt++;
-
     cout<<"계좌 개설 완료!!"<<endl<<endl;
 }
 
 //2.입금
-void deposit(){
+void depositMoney(){
     int id,money;
     cout<<"[입   금]"<<endl;
     cout<<"계좌ID: ";cin>>id;
     cout<<"입금액";cin>>money;
 
     for(int i=0;i<acc_cnt;i++){
-        if(id==member[i].account_number){
-            member[i].balance+=money;
+        if(id==member[i]->getID()){
+            member[i]->deposit(money);
             cout<<"입금완료"<<endl<<endl;
             return;
         }
@@ -118,31 +100,76 @@ void deposit(){
 }
 
 //3.출금
-void withdraw(){
+void withdrawMoney(){
     int id,money;
     cout<<"[출   금]"<<endl;
     cout<<"계좌ID: ";cin>>id;
     cout<<"출금액";cin>>money;
 
     for(int i=0;i<acc_cnt;i++){
-        if(id==member[i].account_number){
-            if(money>member[i].balance){
+        if(id==member[i]->getID()){
+            if(!member[i]->withdraw(money)){
                 cout<<"잔액부족"<<endl<<endl;
                 return;
             }
-            member[i].balance-=money;
             cout<<"출금완료"<<endl<<endl;
             return;
         }
     }
     cout<<"유효하지 않은 ID입니다."<<endl<<endl;
 }
-
-//4.계좌정보 전체 출력
+//4.계좌 정보 전체 출력
 void showAll(){
     for(int i=0;i<acc_cnt;i++){
-        cout<<"계좌 ID: "<<member[i].account_number<<endl;
-        cout<<"이   름: "<<member[i].name<<endl;
-        cout<<"입금액 : "<<member[i].balance<<endl<<endl;
+        member[i]->showInfo();
+    }
+}
+//메뉴
+void showMenu(){
+
+    cout<<"-----------Menu---------"<<endl;
+    cout<<" 1. 계좌개설"<<endl;
+    cout<<" 2. 입 금"<<endl;
+    cout<<" 3. 출 금"<<endl;
+    cout<<" 4. 계좌정보 전체 출력"<<endl;
+    cout<<" 5. 프로그램 종료"<<endl;
+    cout<<"------------------------"<<endl<<endl;
+    
+}
+
+void chooseMenu(){
+    int a;
+    while(1){
+        showMenu();
+        cout<<"선택: ";
+        cin>>a;
+        cout<<endl;
+        switch (a){
+            case MAKEACCOUNT:
+                makeAccount();
+                break;
+
+            case DEPOSIT:
+                depositMoney();
+                break;
+
+            case WITHDRAW:
+                withdrawMoney();
+                break;
+
+            case SHOWALL:
+                showAll();
+                break;
+
+            case EXIT:
+                for(int i =0;i<acc_cnt;i++){
+                    delete member[i];
+                }
+                cout<<"프로그램을 종료합니다."<<endl;
+                return ;
+                
+            default:
+                cout<<"유효하지 않은 번호입니다."<<endl;
+        }
     }
 }
