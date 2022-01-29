@@ -6,12 +6,11 @@
 using namespace std;
 
 enum{MAKEACCOUNT=1, DEPOSIT, WITHDRAW, SHOWALL, EXIT};
-void makeAccount();
-void depositMoney();
-void withdrawMoney();
-void showAll();
-void showMenu();
-void chooseMenu();
+
+/*
+ * 클래스 이름: Account
+ * 클래스 유형: Entity 클래스
+ */
 
 class Account{
 private:
@@ -19,58 +18,83 @@ private:
     int balance;
     char *name;
 public:
-    Account(int _account_number, int _balance, char *_name){
+    Account(int _account_number, int _balance, char *_name);
+    Account();
+    //깊은 복사 생성자
+    Account(Account& copy);
+    int getID() const;
+    void deposit(int money);
+    int withdraw(int money);
+    void showInfo() const;
+    ~Account();
+};
+
+Account::Account(int _account_number, int _balance, char *_name){
         account_number=_account_number;
         balance=_balance;
         name=new char(strlen(_name)+1);
         strcpy(name, _name);
-    }
-    Account(){
+}
+Account::Account(){
         account_number=0;
         balance=0;
         name=NULL;
         cout<<"called Account()"<<endl;
-    }
-    //깊은 복사 생성자
-    Account(Account& copy): account_number(copy.account_number), balance(copy.balance){
+}
+Account::Account(Account& copy): account_number(copy.account_number), balance(copy.balance){
         name=new char(strlen(copy.name)+1);
         strcpy(name, copy.name);
-    }
-    int getID() const {
+}
+int Account::getID() const {
        return account_number; 
-    }
-    void deposit(int money){
+}
+void Account::deposit(int money){
         balance+=money;
-    }
-    int withdraw(int money){
+}
+int Account::withdraw(int money){
         if (balance<money){
             return 0;
         }
         balance-=money;
         return 1;
-    }
-    
-    void showInfo() const {
+}  
+void Account::showInfo() const {
         cout<<"계좌 ID: "<<account_number<<endl;
         cout<<"이   름: "<<name<<endl;
         cout<<"입금액 : "<<balance<<endl<<endl;
-    }
-    
-    ~Account(){
+} 
+Account::~Account(){
         delete []name;
-    }
+}
+
+/*
+ * 클래스 이름: AccountHandler
+ * 클래스 유형: Control 클래스
+ */
+
+class AccountHandler{//contrl class
+private:
+    Account *member[SIZE];
+    int acc_cnt;
+public:
+    AccountHandler(): acc_cnt(0){}
+    void makeAccount();
+    void depositMoney();
+    void withdrawMoney();
+    void showAll();
+    void showMenu() const;
+    void chooseMenu();
 };
 
-Account *member[SIZE];
-int acc_cnt=0;
-
 int main(void){
-    chooseMenu();
+    AccountHandler ac;
+    ac.chooseMenu();
+
     return 0;
 }
 
 //1.계좌 개설
-void makeAccount(){
+void AccountHandler::makeAccount(){
     int id, money;
     char name[NAME_LEN];
 
@@ -88,7 +112,7 @@ void makeAccount(){
 }
 
 //2.입금
-void depositMoney(){
+void AccountHandler::depositMoney(){
     int id,money;
     cout<<"[입   금]"<<endl;
     cout<<"계좌ID: ";cin>>id;
@@ -105,7 +129,7 @@ void depositMoney(){
 }
 
 //3.출금
-void withdrawMoney(){
+void AccountHandler::withdrawMoney(){
     int id,money;
     cout<<"[출   금]"<<endl;
     cout<<"계좌ID: ";cin>>id;
@@ -124,13 +148,13 @@ void withdrawMoney(){
     cout<<"유효하지 않은 ID입니다."<<endl<<endl;
 }
 //4.계좌 정보 전체 출력
-void showAll(){
+void AccountHandler::showAll(){
     for(int i=0;i<acc_cnt;i++){
         member[i]->showInfo();
     }
 }
 //메뉴
-void showMenu() const {
+void AccountHandler::showMenu() const {
 
     cout<<"-----------Menu---------"<<endl;
     cout<<" 1. 계좌개설"<<endl;
@@ -142,7 +166,7 @@ void showMenu() const {
     
 }
 
-void chooseMenu(){
+void AccountHandler::chooseMenu(){
     int a;
     while(1){
         showMenu();
