@@ -2,10 +2,6 @@
 #include <cstring>
 using namespace std;
 
-namespace RISK_LEVEL{
-    enum{RISK_A=3, RISK_B=2, RISK_C=1};
-}
-
 class Employee{//추상 클래스(객체 생성이 불가능한 클래스)
 private:
     char name[100];
@@ -70,18 +66,26 @@ public:
     }
 };
 
+namespace RISK_LEVEL{
+    enum{RISK_A=30, RISK_B=20, RISK_C=10};
+}
+
 class ForeignSalesWorker:public SalesWorker{
 private:
-    int riskLevel;
+    double riskLevel;
 public:
     ForeignSalesWorker(char *name, int pay, double ratio, int level):SalesWorker(name, pay, ratio), riskLevel(level){}
+    
+    int GetRiskPay() const{
+        return (int)(SalesWorker::GetPay()*(riskLevel/100));
+    }
     int GetPay() const{
-        return (int)SalesWorker::GetPay()*(1+riskLevel/10);
+        return SalesWorker::GetPay()+GetRiskPay();
     }
     void ShowSalaryInfo() const {
         ShowYourName();
         cout<<"Salary: "<<SalesWorker::GetPay()<<endl;
-        cout<<"risk pay: "<<SalesWorker::GetPay()*(double)(riskLevel/10)<<endl;
+        cout<<"risk pay: "<<GetRiskPay()<<endl;
         cout<<"sum: "<<GetPay()<<endl<<endl;
     }
 };
@@ -126,11 +130,11 @@ int main() {
     handler.AddEmployee(fseller1);
     
     ForeignSalesWorker *fseller2=new ForeignSalesWorker("Yoon", 1000, 0.1, RISK_LEVEL::RISK_B);
-    fseller1->AddSalesResult(7000);
+    fseller2->AddSalesResult(7000);
     handler.AddEmployee(fseller2);
 
     ForeignSalesWorker *fseller3=new ForeignSalesWorker("Lee", 1000, 0.1, RISK_LEVEL::RISK_C);
-    fseller1->AddSalesResult(7000);
+    fseller3->AddSalesResult(7000);
     handler.AddEmployee(fseller3);
     
     handler.ShowAllSalaryInfo();
