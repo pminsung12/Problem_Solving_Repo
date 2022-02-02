@@ -7,6 +7,10 @@ using namespace std;
 
 enum{MAKEACCOUNT=1, DEPOSIT, WITHDRAW, SHOWALL, EXIT};
 
+enum{LEVEL_A=7, LEVEL_B=4, LEVEL_C=2};
+
+enum{NORMAL=1, CREDIT=2};
+
 /*
  * 클래스 이름: Account
  * 클래스 유형: Entity 클래스
@@ -19,14 +23,46 @@ private:
     char *name;
 public:
     Account(int _account_number, int _balance, char *_name);
-    Account();
     //깊은 복사 생성자
     Account(Account& copy);
     int getID() const;
-    void deposit(int money);
+    virtual void deposit(int money);
     int withdraw(int money);
     void showInfo() const;
     ~Account();
+};
+
+/*
+ * 클래스 이름: NormalAccount
+ * 클래스 유형: Entity 클래스
+ */
+
+class NormalAccount:public Account{
+private:
+    int ratio;
+public:
+    NormalAccount(int _account_number, int _balance, char *_name, int _ratio):Account(_account_number, _balance, _name),ratio(_ratio){}
+    virtual void deposit(int money){
+        Account::deposit(money);
+        Account::deposit(money*(ratio/100.0));
+    }
+};
+
+/*
+ * 클래스 이름: HighCreditAccount
+ * 클래스 유형: Entity 클래스
+ */
+
+class  HighCreditAccount:public NormalAccount{
+private:
+    int level;
+public:
+    HighCreditAccount(int _account_number, int _balance, char *_name, int _ratio, int _level):NormalAccount(_account_number, _balance, _name, _ratio),level(_level){}
+    virtual void deposit(int money){
+
+        NormalAccount::deposit(money);
+        Account::deposit(money*(level/100.0));
+    }
 };
 
 Account::Account(int _account_number, int _balance, char *_name){
@@ -35,12 +71,7 @@ Account::Account(int _account_number, int _balance, char *_name){
         name=new char(strlen(_name)+1);
         strcpy(name, _name);
 }
-Account::Account(){
-        account_number=0;
-        balance=0;
-        name=NULL;
-        cout<<"called Account()"<<endl;
-}
+
 Account::Account(Account& copy): account_number(copy.account_number), balance(copy.balance){
         name=new char(strlen(copy.name)+1);
         strcpy(name, copy.name);
@@ -79,6 +110,8 @@ private:
 public:
     AccountHandler(): acc_cnt(0){}
     void makeAccount();
+    void makeNormalAccount();
+    void makeHighCreditAccount();
     void depositMoney();
     void withdrawMoney();
     void showAll();
@@ -95,19 +128,62 @@ int main(void){
 
 //1.계좌 개설
 void AccountHandler::makeAccount(){
-    int id, money;
+    int choice;
+    cout<<"1. 보통예금계좌 2. 신용신뢰계좌"<<endl;
+    cout<<"선택: ";
+    cin>>choice;
+    if(choice==NORMAL) makeNormalAccount();
+    else if(choice==CREDIT) makeHighCreditAccount();
+}
+void AccountHandler::makeNormalAccount(){
+
+    int id, money, ratio;
     char name[NAME_LEN];
 
-    cout<<"[계좌 개설]"<<endl;
+    cout<<"[보통예금계좌 개설]"<<endl;
     cout<<"계좌ID: ";
     cin>>id;
     cout<<"이름: ";
     cin>>name;
     cout<<"입금액: ";
     cin>>money;
-    
-    member[acc_cnt]=new Account(id, money, name);
+    cout<<"이자율: ";
+    cin>>ratio;
+
+    member[acc_cnt]=new NormalAccount(id, money, name, ratio);
     acc_cnt++;
+    cout<<"계좌 개설 완료!!"<<endl<<endl;
+
+}
+void AccountHandler::makeHighCreditAccount(){
+    int id, money, ratio, level;
+    char name[NAME_LEN];
+
+    cout<<"[신용신뢰계좌 개설]"<<endl;
+    cout<<"계좌ID: ";
+    cin>>id;
+    cout<<"이름: ";
+    cin>>name;
+    cout<<"입금액: ";
+    cin>>money;
+    cout<<"이자율: ";
+    cin>>ratio;
+    cout<<"신용등급(1toA, 2toB, 3toC): ";
+    cin>>level;
+
+    switch(level){
+        case 1:
+            level=LEVEL_A;
+            break;
+        case 2:
+            level=LEVEL_B;
+            break;
+        case 3:
+            level=LEVEL_C;
+            break;
+    }
+
+    member[acc_cnt++]=new HighCreditAccount(id, money, name, ratio, level);
     cout<<"계좌 개설 완료!!"<<endl<<endl;
 }
 
@@ -116,7 +192,7 @@ void AccountHandler::depositMoney(){
     int id,money;
     cout<<"[입   금]"<<endl;
     cout<<"계좌ID: ";cin>>id;
-    cout<<"입금액";cin>>money;
+    cout<<"입금액: ";cin>>money;
 
     for(int i=0;i<acc_cnt;i++){
         if(id==member[i]->getID()){
