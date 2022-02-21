@@ -1,6 +1,4 @@
-//vector로 구현하다가 시간초과 메모리초과 나가지고 비트마스킹을 구글링함
-//[출처](https://donggoolosori.github.io/2020/09/24/boj-11723/).
-//비트마스크설명잘되어있음
+//비트마스크
 #include <iostream>
 #include <string>
 using namespace std;
