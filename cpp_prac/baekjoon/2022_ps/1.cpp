@@ -17,9 +17,8 @@ int main(){
     int cnt=0;
     for(int i=0;i<N-1;i++){
         chk=0;
-        if(v[i]==v[i+1]){
+        if(v[i]==v[i+1]) 
             cnt++;
-        }
         else{
             for(int j=0;j<cnt+1;j++){
                 cout<<i+2<<' ';

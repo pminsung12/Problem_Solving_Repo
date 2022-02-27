@@ -16,3 +16,12 @@ int main(){
     }
     return 0;
 }
+
+
+awfeafsfsefasfsafaf
+
+k는 s의 두배만큼
+s=1 k=2
+
+hello world
+
