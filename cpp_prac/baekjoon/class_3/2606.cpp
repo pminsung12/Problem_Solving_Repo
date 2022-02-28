@@ -11,7 +11,7 @@ int bfs(bool visited[], int n, vector<int> graph[],int size){
     queue<int> q;
     visited[n]=true;
     q.push(n);
-    //cout<<n<<' ' ;
+    //cout<<n<<' ';
     while(!q.empty()){
         int current = q.front();
         cnt++;
