@@ -2,24 +2,43 @@
 using namespace std;
 
 int n;
-int cnt=1;
-int arr[n+1][n+1];
-int cutting(int x,int y,int size){//한변의길이
-    // int a=n-x;
-    // int b=n-y;
-    for(int i=x;i<size;i++){
-        for(int j=y;j<size;j++){
-            if(arr[x][y]!=arr[x+1][y+1]){
-                cnt+=3;
+int blue=0,white=0;
+int arr[129][129];
+void cutting(int x,int y,int size){//한변의길이
+    int chk=0;
+    int dontcount=0;
+    int a=arr[x][y];
+    //cout<<'('<<x<<','<<y<<','<<size<<')'<<' ';
+    for(int i=x;i<x+size;i++){
+        for(int j=y;j<y+size;j++){
+            if(arr[i][j]!=a){
+                chk=1;
+                dontcount=1;
+                //cout<<'\n'<<x<<','<<y<<','<<size/2;
                 cutting(x,y,size/2);
-                cutting(x+y/2,y,size/2);
+                
+                //cout<<'\n'<<x+size/2<<','<<y<<','<<size/2;
+                cutting(x+size/2,y,size/2);
+                
+                //cout<<'\n'<<x<<','<<y+size/2<<','<<size/2;
                 cutting(x,y+size/2,size/2);
+                
+                //cout<<'\n'<<x+size/2<<','<<y+size/2<<','<<size/2;
                 cutting(x+size/2,y+size/2,size/2);
+                
+                break;
             }
+            a=arr[i][j];
         }
+        if(chk) break;
+    }
+    if(!dontcount){
+        if(arr[x][y]==1) blue++;
+        else white++;    
     }
     
-    return cnt;
+    
+    return;
 }
 
 int main(){
@@ -28,8 +47,14 @@ int main(){
     cout.tie(NULL);
     
     cin>>n;
-    int ans=cutting(0,0,n);
-    cout<<ans<<'\n';
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>arr[j][i];
+        }
+    }
+
+    cutting(0,0,n);
+    cout<<white<<'\n'<<blue<<'\n';
 
     return 0;
 }
