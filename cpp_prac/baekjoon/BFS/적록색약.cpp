@@ -14,14 +14,14 @@ bool isValid(int x,int y){
     return x>=0&&x<N&&y>=0&&y<N&&!visited[x][y];
 }
 
-int bfs(int color[MAX][MAX]){
+int bfs(char color[MAX][MAX]){
     int cnt=0;
     queue<pair<int,int>> q;
     for(int i=0;i<N;i++){
         for(int j=0;j<N;j++){
             if(!visited[i][j]){
                 cnt++;
-                int temp=color[i][j];
+                char temp=color[i][j];
                 
                 q.push(make_pair(i,j));
                 visited[i][j]=true;
@@ -50,10 +50,10 @@ int main(){
     cout.tie(NULL);
 
     cin>>N;
-    int a;
+    string a;
 
-    int color[MAX][MAX];//r g b
-    int xcolor[MAX][MAX];//r b
+    char color[MAX][MAX];//r g b
+    char xcolor[MAX][MAX];//r b
     for(int i=0;i<N;i++){
         for(int j=0;j<N;j++){  
             cin>>a;
