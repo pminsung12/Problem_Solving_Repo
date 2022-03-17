@@ -22,7 +22,7 @@ int bfs(char color[MAX][MAX]){
             if(!visited[i][j]){
                 cnt++;
                 char temp=color[i][j];
-                
+                //cout<<temp<<'\n';
                 q.push(make_pair(i,j));
                 visited[i][j]=true;
                 while(!q.empty()){
@@ -56,9 +56,9 @@ int main(){
     char xcolor[MAX][MAX];//r b
     for(int i=0;i<N;i++){  
         cin>>a;
-        color[i]=a;
         for(int j=0;j<N;j++){
-            color[i][j]=a[j]
+            color[i][j]=a[j];
+            xcolor[i][j]=a[j];
             if(a[j]=='G'){
                 xcolor[i][j]='R';
             }
@@ -66,6 +66,7 @@ int main(){
     }
     int res=bfs(color);
     cout<<res<<'\n';
+    memset(visited,false,sizeof(visited));
     res=bfs(xcolor);
     cout<<res<<'\n';
 
