@@ -54,11 +54,12 @@ int main(){
 
     char color[MAX][MAX];//r g b
     char xcolor[MAX][MAX];//r b
-    for(int i=0;i<N;i++){
-        for(int j=0;j<N;j++){  
-            cin>>a;
-            color[i][j]=a;
-            if(a=='G'){
+    for(int i=0;i<N;i++){  
+        cin>>a;
+        color[i]=a;
+        for(int j=0;j<N;j++){
+            color[i][j]=a[j]
+            if(a[j]=='G'){
                 xcolor[i][j]='R';
             }
         }
