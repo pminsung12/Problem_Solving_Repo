@@ -5,6 +5,8 @@ using namespace std;
 int N;
 int house[MAX][MAX];
 bool visited[MAX][MAX];
+int dx[4]={0,0,-1,1};
+int dy[4]={1,-1,0,0};
 int cnt;
 int count_house[313];
 
@@ -12,8 +14,8 @@ void dfs(int x,int y){
     visited[x][y]=true;
     count_house[cnt-1]++;
     for(int k=0;k<4;k++){
-        int nx=x+dx[i];
-        int ny=y+dy[i];
+        int nx=x+dx[k];
+        int ny=y+dy[k];
         if(!visited[nx][ny]&&nx>=0&&nx<N&&ny>=0&&ny<N&&house[nx][ny]==1){
             dfs(nx,ny);
         }
@@ -39,12 +41,13 @@ int main(){
 
     string s;
     for(int i=0;i<N;i++){
-        cin>>s
+        cin>>s;
         for(int j=0;j<N;j++){
-            house[i][j]=s[j];
+            house[i][j]=s[j]-'0';
         }
     }
-    sort(count_house,count_house+cnt,);
+    solve();
+    sort(count_house,count_house+cnt);
     cout<<cnt<<'\n';
     for(int i=0;i<cnt;i++){
         cout<<count_house[i]<<'\n';
