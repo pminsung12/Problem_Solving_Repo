@@ -33,7 +33,6 @@ void bfs(int a, int b){
                     이게 핵심(값이 새로 씌워지지 않고 전칸에서 1을 더하니까 항상 최솟값)
                 */
                 dist[new_x][new_y]=dist[x][y]+1;
-                cout<<dist[new_x][new_y]<<'\n';
             }
         }
     }
