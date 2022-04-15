@@ -1,3 +1,4 @@
+//DFS + DP
 #include <iostream>
 using namespace std;
 #define MAX 501
@@ -5,6 +6,7 @@ using namespace std;
 int N,M;
 int map[MAX][MAX];
 bool visited[MAX][MAX];
+int dp[MAX][MAX];
 int dx[4]={0,0,-1,1};
 int dy[4]={1,-1,0,0};
 int cnt=0;
@@ -14,23 +16,22 @@ bool isValid(int a, int b){
     return false;
 }
 
-void dfs(int x, int y){
-    //visited[x][y]=true;
+int dfs(int x, int y){
     if(x==N-1&&y==M-1){
-        cnt++;
-        return;
+        return 1;
     }
+    if(dp[x][y]!=-1) return dp[x][y];
+    dp[x][y]=0;
     for(int i=0;i<4;i++){
         int nx=x+dx[i];
         int ny=y+dy[i];
         if(isValid(nx,ny)){
             if(map[nx][ny]<map[x][y]){
-                visited[nx][ny]=true;
-                dfs(nx,ny);
-                visited[nx][ny]=false;
+                dp[x][y]+=dfs(nx,ny);
             }
         }
     }
+    return dp[x][y];
 }
 
 int main(){
@@ -42,10 +43,9 @@ int main(){
     for(int i=0;i<N;i++){
         for(int j=0;j<M;j++){
             cin>>map[i][j];
+            dp[i][j]=-1;
         }
     }
-    visited[0][0]=true;
-    dfs(0,0);
-    cout<<cnt<<'\n';
+    cout<<dfs(0,0)<<'\n';
     return 0;
 }
