@@ -5,14 +5,20 @@ using namespace std;
 void checking(string num[], int n){
     for(int i=0;i<n;i++){
         for(int j=i+1;j<n;j++){
-            for(int k=0;k<min(num[i].length(),num[j].length());k++){
+            int t=min(num[i].length(),num[j].length());
+            for(int k=0;k<t;k++){
                 if(num[i][k]!=num[j][k]) break;
                 else{
-                    num
+                    if(k==t-1){
+                        cout<<"NO"<<'\n';
+                        return;
+                    }
                 }
             }
         }
     }
+    cout<<"YES"<<'\n';
+    return;
 }
 
 int main(){
