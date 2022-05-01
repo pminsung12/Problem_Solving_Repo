@@ -8,7 +8,7 @@ void checking(string num[], int n){
             for(int k=0;k<min(num[i].length(),num[j].length());k++){
                 if(num[i][k]!=num[j][k]) break;
                 else{
-                    
+                    num
                 }
             }
         }
