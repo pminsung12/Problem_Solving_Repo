@@ -27,6 +27,7 @@ int solution(vector<int> scoville, int K) {
 #include <string>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
